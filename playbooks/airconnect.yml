@@ -1,0 +1,31 @@
+---
+- stat: path=~/airconnect
+  register: airconnect_exist_rule
+- name: clone air connect
+  command: "git clone https://github.com/philippe44/AirConnect.git ~/airconnect"
+  when: airconnect_exist_rule.stat.exists == false
+- name: update air connect
+  command: bash -c "cd /root/airconnect; git pull"
+  when: airconnect_exist_rule.stat.exists == true
+
+- name: copy airconnect executable
+  command: "{{ item }}"
+  with_items:
+    - "cp /root/airconnect/bin/airupnp-arm /usr/local/bin/airupnp"
+    - "chmod +x /usr/local/bin"
+
+- name: Setup systemd for airconnect
+  become: true
+  template:
+    src: airconnect.service
+    dest: /etc/systemd/system/airconnect.service
+    mode: 0644
+
+- name: Ensure my daemon airconnect is started
+  become: true
+  systemd:
+    name: airconnect
+    state: started
+    enabled: yes
+    daemon-reload: yes
+    no_block: yes

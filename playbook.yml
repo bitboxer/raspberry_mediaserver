@@ -1,0 +1,44 @@
+---
+- hosts: raspberry
+  remote_user: pi
+  become_user: root
+  become: true
+  tasks:
+
+  - name: load config.yml
+    include_vars:
+      file: config.yml
+  - name: Install base packages
+    apt:
+      name: 
+        - aptitude
+        - vim
+        - unattended-upgrades
+        - apt-listchanges
+        - htop
+        - git
+      state: latest
+  - name: install bash aliases
+    template:
+      src: config/bash_aliases
+      dest: /home/pi/.bash_aliases
+      owner: pi
+      group: pi
+
+  - name: Create /media folder for hard drive
+    file:
+      path: /media
+      state: directory
+      mode: u=rw,g=wx,o=rwx
+
+  - name: Mount hard drive
+    mount:
+      path: /media
+      src: /dev/sda1
+      state: mounted
+      opts: rw,auto,umask=000
+      fstype: vfat
+
+  - include: playbooks/home_assistant.yml
+  - include: playbooks/airconnect.yml
+  - include:  playbooks/plex.yml

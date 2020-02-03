@@ -1,0 +1,30 @@
+---
+- name: Install dependencies
+  apt:
+    name: 
+      - apt-transport-https
+    state: latest
+
+- name: Add an Apt signing key
+  apt_key:
+    url: https://downloads.plex.tv/plex-keys/PlexSign.key
+    state: present
+
+- apt_repository:
+    repo: deb https://downloads.plex.tv/repo/deb public main
+    state: present
+
+- name: Install plex
+  apt:
+    name: 
+      - plexmediaserver
+    state: latest
+
+- name: Ensure my daemon plexmediaserver is started
+  become: true
+  systemd:
+    name: plexmediaserver
+    state: started
+    enabled: yes
+    daemon-reload: yes
+    no_block: yes
