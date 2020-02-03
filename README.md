@@ -13,6 +13,8 @@ will automatically update packages, but will not
 restart. You might want to do that manually for
 kernel patches.
 
+The ansible script will also mount a usb hard disk from /dev/sda1 to /media.
+
 # How to use it
 
 Steps to install it on your machine:
@@ -36,3 +38,7 @@ Steps to install it on your machine:
 
 The configuration of home assistant can be found in `/home/homeassistant/.homeassistant`.
 
+# Plex
+
+Plex works pretty well, but make sure your files are MP4 files.
+Retranscoding on the fly can be done, but is not the fastest :wink:.
