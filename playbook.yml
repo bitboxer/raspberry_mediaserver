@@ -36,7 +36,7 @@
       path: /media
       src: /dev/sda1
       state: mounted
-      opts: rw,auto,umask=000
+      opts: rw,auto,umask=000,iocharset=cp437
       fstype: vfat
 
   - include: playbooks/home_assistant.yml
